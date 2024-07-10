@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"main/numbers"
+)
 
 // Strucs
 type Human struct {
@@ -10,11 +14,7 @@ type Human struct {
 
 func main() {
 	fmt.Println("Hello World")
-	var result int = add(1, 2)
-	fmt.Printf("result is %v\n", result)
-
 	loop(5)
-
 	arr := []string{"hello", "my", "name", "is", "dog"}
 	rangeLoop(arr)
 
@@ -23,13 +23,9 @@ func main() {
 
 	jane := Human{name: "Jane", age: 10}
 	printDetails(jane)
-}
+	fmt.Println("calling the add method from numbers", numbers.Add(2, 3))
 
-// Add Method
-// Example method
-func add(x int, y int) int {
-	var answer int = x + y
-	return answer
+	fmt.Println("calling subtract method from numbers", numbers.Subtract(3, 1))
 }
 
 // Loop Method
