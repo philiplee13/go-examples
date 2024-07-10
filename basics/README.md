@@ -5,7 +5,6 @@
 - loops
 - strucs
 - packages
-- context
 
 ### Good to knows
 
