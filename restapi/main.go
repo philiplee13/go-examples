@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"restapi/api/common"
 	"restapi/api/resources/users"
 	"restapi/config"
 
@@ -24,6 +25,10 @@ func main() {
 
 	router := gin.Default()
 
+	// middleware needs to come first?
+	router.Use(common.CustomMiddleware)
+
+	// routes
 	uc := users.UserController{Database: conn}
 	ur := users.UserRouter{Controller: uc}
 	ur.UserRoutes(router)

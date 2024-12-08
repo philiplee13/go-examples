@@ -5,13 +5,14 @@
   - connection - done
   - pooling connection
   - crud - done
-  - middlware
-  - httpinterceptor
-  - error handling
-- restful api
+  - middlware - done
+  - error handling - done
+  - auth
+    - authn
+    - authz
+- restful api - done
   - get
   - post
-  - patch
   - delete
   - put
 - http requests to 3rd party services
