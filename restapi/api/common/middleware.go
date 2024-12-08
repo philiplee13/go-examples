@@ -4,11 +4,13 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func CustomMiddleware(c *gin.Context) {
 	fmt.Println("Inside custom middleware")
 
+	c.Writer.Header().Set("X-Request-Id", uuid.New().String())
 	fmt.Println("sending request")
 
 	c.Next()
