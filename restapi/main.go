@@ -11,7 +11,6 @@ import (
 
 func main() {
 	ctx := context.Background()
-	fmt.Println("hello")
 	dbconfig := config.Dbconfig{
 		Host:     "localhost",
 		Password: "postgres",

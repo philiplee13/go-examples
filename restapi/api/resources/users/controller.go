@@ -22,8 +22,8 @@ func NewUserController(db *pgx.Conn) *UserController {
 func (uc UserController) GetAll(c *gin.Context) {
 	fmt.Println("inside get all method")
 	users, err := uc.us.GetUsers(c, uc.Database)
-	if !err {
-		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Error happened when trying to get all users"})
+	if err != nil {
+		c.JSON(http.StatusExpectationFailed, gin.H{"message": err})
 	}
 	c.JSON(http.StatusOK, users)
 }
@@ -33,10 +33,13 @@ func (uc UserController) GetUserById(c *gin.Context) {
 	userid, _ := strconv.Atoi(id)
 
 	user, err := uc.us.FindUser(c, uc.Database, userid)
-	if !err {
-		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Error happened whhen trying to find single user"})
+	if err != nil {
+		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Error happened when trying to find single user"})
+	} else if user == nil {
+		c.JSON(http.StatusOK, gin.H{"message": "User not found"})
+	} else {
+		c.JSON(http.StatusOK, user)
 	}
-	c.JSON(http.StatusOK, user)
 }
 
 func (uc UserController) Create(c *gin.Context) {
