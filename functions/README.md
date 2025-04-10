@@ -1,0 +1,4 @@
+- functions
+- return types
+- multiple return types
+- varadic methods
