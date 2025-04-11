@@ -9,6 +9,13 @@ func main() {
 	fmt.Println(multiplereturntypes(true))
 	varadicfunction(1, 2)
 	varadicfunction(1, 2, 3)
+
+	numanonfunc := anonfunc()
+	fmt.Println(numanonfunc())
+	fmt.Println(numanonfunc()) // the reason why this increments is bc
+	// we assigned the actual function to the var
+	// and we're continously calling it
+	// so for each call -> the newly incremented number is getting returned
 }
 
 func genericmethod() {
@@ -33,4 +40,15 @@ func varadicfunction(numbers ...int) int {
 		total += num
 	}
 	return total
+}
+
+func anonfunc() func() int {
+	fmt.Println("start of anon func")
+	number := 0
+	fmt.Println("number at start is", number)
+	return func() int {
+		number++
+		fmt.Println("number inside of anon func is ", number)
+		return number
+	}
 }

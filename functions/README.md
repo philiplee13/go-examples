@@ -2,3 +2,4 @@
 - return types
 - multiple return types
 - varadic methods
+- closures (anon funcs)
