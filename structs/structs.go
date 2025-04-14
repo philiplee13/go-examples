@@ -21,6 +21,11 @@ func main() {
 
 	fmt.Println("getting name of person", p.getname())
 	fmt.Println("getting age of person", p.getage())
+	fmt.Println("--------------interfaces------------------")
+	d := dog{"dog", 2}
+	c := cat{"cat", 3}
+	makesound(d)
+	makesound(c)
 }
 
 func createperson(name string, age int) person {
@@ -33,4 +38,31 @@ func (person *person) getage() int {
 
 func (person *person) getname() string {
 	return person.name
+}
+
+// interfaces
+type animal interface {
+	sound() string
+}
+
+type dog struct {
+	name string
+	age  int
+}
+
+type cat struct {
+	name string
+	age  int
+}
+
+func (d dog) sound() string {
+	return "bark"
+}
+
+func (c cat) sound() string {
+	return "meow"
+}
+
+func makesound(a animal) {
+	fmt.Println("animal sound for", a, "is", a.sound())
 }
