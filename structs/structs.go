@@ -22,9 +22,11 @@ func main() {
 	fmt.Println("getting name of person", p.getname())
 	fmt.Println("getting age of person", p.getage())
 	fmt.Println("--------------interfaces------------------")
-	d := dog{"dog", 2}
+	o := owner{"john"}
+	d := dog{"dog", 2, o}
 	c := cat{"cat", 3}
 	makesound(d)
+	fmt.Println("the dogs owner is", d.getowner())
 	makesound(c)
 }
 
@@ -45,9 +47,18 @@ type animal interface {
 	sound() string
 }
 
+type owner struct {
+	name string
+}
+
+func (o owner) getowner() string {
+	return o.name
+}
+
 type dog struct {
 	name string
 	age  int
+	owner
 }
 
 type cat struct {
