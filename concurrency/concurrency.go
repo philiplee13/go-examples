@@ -2,100 +2,54 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
+func task(name string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := 0; i <= 3; i++ {
+		fmt.Println(name, "Running ", i)
+		time.Sleep(time.Millisecond * 500)
+	}
+}
+
 func main() {
-	fmt.Println("sequential run")
-	loop("sequential")
+	// adding go ahead of the method call makes each method call run concurrently
+	// var wg sync.WaitGroup
+	// wg.Add(2) // number of goroutines
+	// go task("Task 1", &wg)
+	// go task("task 2", &wg)
+	// wg.Wait()
+	// time.Sleep(time.Second * 2) // time.Sleep like this to wait for all goroutines to finish is finicky
 
-	fmt.Println("starting goroutines")
-	go loop("routine1")
-	go loop("routine2")
+	// doing things this way - means we can only send one value at a time
+	// numberChannel := make(chan int)
+	// go sendData(numberChannel, 20)
+	// go getData(numberChannel)
+	// go sendData(numberChannel, 30)
+	// go getData(numberChannel)
 
-	// anon func
-	go func(msg string) {
-		fmt.Println(msg)
-	}("going in anon func")
+	bufferedChannel := make(chan int, 5)
+	go sendData(bufferedChannel, 1)
+	go sendData(bufferedChannel, 2)
+	go sendData(bufferedChannel, 3)
+	go getData(bufferedChannel)
+	go getData(bufferedChannel)
+	go getData(bufferedChannel)
 
-	// need to wait https://stackoverflow.com/questions/42217995/why-doesnt-this-go-code-print-anything-with-a-goroutine
-	// or use a waitgroup
-	time.Sleep(time.Second * 2)
-	fmt.Println("done")
-
-	// channels
-	fmt.Println("-------------channels-----------------")
-	channel := make(chan string)
-	sendmessage(channel, "hello")
-	sendmessage(channel, "hello2") // by default channels are unbuffered
-	// this means that as messages come in -> it's like a stack
-	// newest messages are on top
-	// we need to pass in a size if we want this to be unbuffered
-	// so something like make(chan string, 2)
-	fmt.Println("sleeping for 2 seconds")
-	time.Sleep(time.Second * 2)
-	getmessage(channel)
-	getmessage(channel)
-
-	fmt.Println("-------------channel sync-----------------")
-	boolchannel := make(chan bool)
-	go worker(boolchannel)
-	<-boolchannel // this will block (prevent the program from finishing) until the worker is done
-
-	fmt.Println("------select------")
-	selectexample()
+	time.Sleep(time.Second * 5)
+	fmt.Println("All goroutines finished")
 }
 
-// loop that takes in a from param and prints it with the index
-func loop(from string) {
-	for i := 0; i < 3; i++ {
-		fmt.Println(from, ":", i)
-	}
+// channels and it's usage
+func sendData(channel chan<- int, number int) {
+	fmt.Println("Sending number", number)
+	channel <- number
+	fmt.Println("Finished sending", number)
 }
 
-// channels
-func sendmessage(channel chan<- string, message string) { // arrow is on right side bc we're sending
-	// this is called channel directions
-	fmt.Println("sending message", message)
-	go func() { channel <- message }()
-}
-
-func getmessage(channel <-chan string) { // notice the difference in the arrows
-	// arrow is on left side bc we're receiving
-	msg := <-channel
-	fmt.Println("got from channel:", msg)
-}
-
-// channel sync
-func worker(channel chan bool) {
-	fmt.Println("working...")
-	time.Sleep(time.Second * 2)
-	fmt.Println("done")
-	channel <- true
-}
-
-// select
-
-func selectexample() {
-	c1 := make(chan string)
-	c2 := make(chan string)
-	go func() {
-		time.Sleep(time.Second * 1)
-		c1 <- "one"
-	}()
-
-	go func() {
-		time.Sleep(time.Second * 2)
-		c2 <- "two"
-	}()
-
-	for i := 0; i < 2; i++ { // this loop needs to go twice because we're waiting for
-		// 2 channels
-		select {
-		case msg1 := <-c1:
-			fmt.Println("received", msg1)
-		case msg2 := <-c2:
-			fmt.Println("received", msg2)
-		}
-	}
+func getData(channel <-chan int) {
+	value := <-channel
+	fmt.Println("Got value", value)
 }
